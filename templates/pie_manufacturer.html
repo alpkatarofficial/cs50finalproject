@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manufacturer Distribution by State(s)</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .left-col {
+            width: 40%;
+            float: left;
+            padding: 20px;
+        }
+        .right-col {
+            width: 60%;
+            float: left;
+        }
+    </style>
+</head>
+<body class="bg-light">
+<div class="container py-5">
+    <h2 class="text-center text-primary mb-4">Manufacturer % by Selected State(s)</h2>
+
+    <div class="left-col">
+        <form action="/piechart/manufacturer" method="POST">
+            <div class="mb-3">
+                <label for="states" class="form-label">Select State(s)</label>
+                <select class="form-select" name="states" id="states" multiple>
+                    {% for state in states %}
+                        <option value="{{ state[0] }}">{{ state[0] }}</option>
+                    {% endfor %}
+                </select>
+                <small class="text-muted">Hold CTRL (Windows) or CMD (Mac) to select multiple</small>
+            </div>
+            <button type="submit" class="btn btn-primary">Generate Pie Chart</button>
+        </form>
+
+        {% if sql_query %}
+        <div class="mt-4 p-3 bg-white rounded border shadow-sm">
+            <h6 class="text-muted">SQL Query Used:</h6>
+            <pre style="font-family: 'Poppins', monospace; font-weight: 500; font-size: 0.9rem;" class="bg-light p-2 text-dark">{{ sql_query }}</pre>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="right-col">
+        {% if chart_data %}
+        <div id="pieChart" style="height: 500px;"></div>
+        <script>
+            var data = [{
+                labels: {{ chart_data | map(attribute=0) | list | tojson }},
+                values: {{ chart_data | map(attribute=1) | list | tojson }},
+                type: 'pie',
+                textinfo: "label+percent",
+                insidetextorientation: "radial"
+            }];
+
+            var layout = {
+                margin: { t: 0, b: 0, l: 0, r: 0 },
+                height: 500
+            };
+
+            Plotly.newPlot('pieChart', data, layout);
+        </script>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>

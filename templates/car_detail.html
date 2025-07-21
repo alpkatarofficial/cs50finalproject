@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ car[5] }} - Car Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .main-image-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 aspect ratio */
+            background-color: #f0f0f0;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .main-image-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .thumbnail-grid .thumbnail-wrapper {
+            aspect-ratio: 1 / 1;
+            border: 1px solid #ccc;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .thumbnail-grid img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="bg-light">
+<div class="container py-4">
+    <!-- Title -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h2 class="fw-bold text-primary">{{ car[5] }} ({{ car[3] }})</h2>  <!-- Model + Year -->
+        </div>
+    </div>
+
+    <!-- Main Content Row -->
+    <div class="row">
+        <!-- LEFT: Images -->
+        <div class="col-md-7">
+            <!-- Main Image -->
+            <div class="main-image-container">
+                <img src="{{ car_image_url if car_image_url else url_for('static', filename='default_car.jpg') }}"
+                    alt="Car Image">
+            </div>
+
+            <!-- Thumbnails -->
+            <div class="row g-2 thumbnail-grid">
+                {% for i in range(6) %}
+                <div class="col-4 col-md-2">
+                    <div class="thumbnail-wrapper">
+                        <img src="{{ car_image_url if car_image_url else url_for('static', filename='default_car.jpg') }}"
+                            alt="Thumb {{ i+1 }}">
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- RIGHT: Car Specs -->
+        <div class="col-md-5">
+            <table class="table table-bordered bg-white">
+                <tbody>
+                    <tr><th>Region</th><td>{{ car[1] }}</td></tr>
+                    <tr><th>Manufacturer</th><td>{{ car[4] }}</td></tr>
+                    <tr><th>Type</th><td>{{ car[13] }}</td></tr>
+                    <tr><th>Model</th><td>{{ car[5] }}</td></tr>
+                    <tr><th>Year</th><td>{{ car[3] }}</td></tr>
+                    <tr><th>Price</th><td>${{ "{:,.0f}".format(car[2]) }}</td></tr>
+                    <tr><th>Condition</th><td>{{ car[6] }}</td></tr>
+                    <tr><th>Mileage</th><td>{{ "{:,.0f}".format(car[9]) }} km</td></tr>
+                    <tr><th>Fuel</th><td>{{ car[8] }}</td></tr>
+                    <tr><th>Transmission</th><td>{{ car[11] }}</td></tr>
+                    <tr><th>Paint Color</th><td>{{ car[14] }}</td></tr>
+                    <tr><th>State</th><td>{{ car[15] }}</td></tr>
+                </tbody>
+            </table>
+            <a href="/results" class="btn btn-secondary mt-3">← Back to Results</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
